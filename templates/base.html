@@ -1,0 +1,41 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        Samsung Store
+        {% endblock %}
+    </title>
+    <!-- HTML in your document's head -->
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    {% tailwind_css %}
+    <style>
+        /* CSS */
+        :root {
+            font-family: Inter, sans-serif;
+            font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+        }
+        @supports (font-variation-settings: normal) {
+            :root { font-family: InterVariable, sans-serif; }
+        }
+    </style>
+    <!-- Alpine Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

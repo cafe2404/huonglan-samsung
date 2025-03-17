@@ -3,7 +3,7 @@ cafe@2024
 
 cd /opt/huonglan-samsung/
 source venv/bin/activate
-
+python manage.py fetch_samsung_data
 sudo nano /etc/nginx/sites-available/samsung
 
 server {

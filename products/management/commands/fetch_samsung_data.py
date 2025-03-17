@@ -4,7 +4,9 @@ from products.models import ProductCategory, ProductFamily, ProductModel,ChipOpt
 from decimal import Decimal
 
 SAMSUNG_API_URL = "https://searchapi.samsung.com/v6/front/epp/v2/product/finder/global"
-
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+}
 class Command(BaseCommand):
     help = "Fetch product data from Samsung API and save to database"
 
@@ -26,7 +28,7 @@ class Command(BaseCommand):
                 "companyCode": company_code,
                 "pfType": "G",
             }
-            response = requests.get(SAMSUNG_API_URL, params=params)
+            response = requests.get(SAMSUNG_API_URL, params=params,headers=HEADERS)
             data = response.json()
             result = data.get("response", {}).get("resultData", {})
             products = result.get("productList", [])

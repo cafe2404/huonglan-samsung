@@ -1,22 +1,47 @@
+ssh-keygen -R 160.187.246.83
 ssh root@160.187.246.83
 cafe@2024
+cd /opt/
+git clone https://github.com/cafe2404/huonglan-samsung.git
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3-pip python3-venv nginx -y
 
 cd /opt/huonglan-samsung/
+python3 -m venv venv
 source venv/bin/activate
+pip install -r requirements.txt
 python manage.py fetch_samsung_data
+python manage.py collectstatic --noinput
+-------------------------------------------
+sudo nano /etc/systemd/system/gunicorn.service
+
+[Unit]
+Description=Gunicorn Daemon for Django Project
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/opt/huonglan-samsung
+ExecStart=/opt/huonglan-samsung/venv/bin/gunicorn --workers 3 --bind unix:/opt/huonglan-samsung/gunicorn.sock samsung.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start gunicorn
+sudo systemctl enable gunicorn
+sudo systemctl status gunicorn
+sudo systemctl restart gunicorn
+-------------------------------------------
 sudo nano /etc/nginx/sites-available/samsung
 
 server {
     listen 80;
     server_name samsungcenter.shop www.samsungcenter.shop;
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/letsencrypt/;
-        allow all;
-    }
-
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://unix:/opt/huonglan-samsung/gunicorn.sock;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -25,7 +50,6 @@ server {
 
     location /static/ {
         alias /var/www/samsung/static/;
-        autoindex on;
     }
 
     location /media/ {
@@ -35,3 +59,7 @@ server {
     error_log /var/log/nginx/django_error.log;
     access_log /var/log/nginx/django_access.log;
 }
+
+sudo ln -s /etc/nginx/sites-available/samsung /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl restart nginx

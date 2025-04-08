@@ -31,9 +31,23 @@ SECRET_KEY = "django-insecure-)7#7@1cvad-r*x3n8fyusuhnc3-eq@uzc0zz&zk!vajh##%jd^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "samsungcenter.shop",
+    "127.0.0.1",
+    "localhost",
+    "www.samsungcenter.shop",
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://samsungcenter.shop',
+    'https://www.samsungcenter.shop',
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://samsungcenter.shop",
+    "https://www.samsungcenter.shop",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 # Application definition
 
 INSTALLED_APPS = [
